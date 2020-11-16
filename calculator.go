@@ -69,7 +69,8 @@ func MultiplyMany(inputs ...float64) float64{
         }
         
     }
-    return total
+	return total
+	
 }
 
 func DivideMany(inputs ...float64) (float64){
