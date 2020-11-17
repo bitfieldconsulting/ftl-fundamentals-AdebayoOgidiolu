@@ -2,31 +2,30 @@ package calculator_test
 
 import (
 	"calculator"
-	"testing"
 	"math/rand"
+	"testing"
 	"time"
-	
 )
 
 func TestAdd(t *testing.T) {
 	t.Parallel()
 	type testCase struct {
+		name string
 		a, b float64
 		want float64
-		message string
 	}
 
 	testCases := []testCase{
-		{a: 2, b: 2, want: 4, message: "Two +ve numbers"},
-		{a: -3, b: 3, want: 0, message: "One +ve and one -ve number"},
-		{a: 5, b: 2, want: 7, message: "Two +ve numbers"},
+		{name: "Two plus two equals four", a: 2, b: 2, want: 4},
+		{name: "Negative three plus three equals zero", a: -3, b: 3, want: 0},
+		{name: "Five plus two equals Seven", a: 5, b: 2, want: 7},
 	}
 
 	for _, tc := range testCases {
 
 		got := calculator.Add(tc.a, tc.b)
 		if tc.want != got {
-			t.Errorf("%s : Add(%f , %f): want %f, got %f",tc.message, tc.a, tc.b, tc.want, got)
+			t.Errorf("%s : Add(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 	}
 
@@ -49,22 +48,25 @@ func TestAddRandom(t *testing.T) {
 func TestSubtract(t *testing.T) {
 	t.Parallel()
 	type testCase struct {
+		name string
 		a, b float64
 		want float64
-		message string
 	}
 
-	testCases := []testCase {
-		{a: 6, b: 5.2, want: 0.7999999999999998, message: "A fractional number in the mix"}, // 0.8 failed the test here. 
-		{a: -2, b: 4, want: -6, message: "One -ve and one +ve number"},
-		{a: 5, b: 5, want: 0, message: "Two +ve numbers"},
+	testCases := []testCase{
+		{name: "Six minus five point two equals zero point eight", a: 6, b: 5.2, want: 0.8},
+		{name: "Negative two minus four equals -negative six", a: -2, b: 4, want: -6},
+		{name: "Five minus five equals zero", a: 5, b: 5, want: 0},
 	}
+
+	var tolerance float64 = 0.0000002
 
 	for _, tc := range testCases {
-		got := calculator.Subtract(tc.a, tc.b);
-		if tc.want != got {
-			t.Errorf("%s : %f minus %f failed. Expected %f but got %f", tc.message, tc.a, tc.b, tc.want, got)
+		got := calculator.Subtract(tc.a, tc.b)
+		if !calculator.CloseEnough(tc.want, got, tolerance) {
+			t.Errorf("%s : %f divided by %f failed. Expected %f but got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
+
 	}
 }
 
@@ -85,21 +87,22 @@ func TestSubtractRandom(t *testing.T) {
 func TestMultiply(t *testing.T) {
 	t.Parallel()
 	type testCase struct {
-		a, b float64
-		want float64
+		name    string
+		a, b    float64
+		want    float64
 		message string
 	}
 
-	testCases := []testCase {
-		{a: 7, b: 6, want: 42, message: "One -ve and one +ve number"},
-		{a: 6.5, b: 2, want: 13, message: "A fractional number in the mix"},
-		{a: 0, b: 3, want: 0, message: "A Zero in the mix"},
+	testCases := []testCase{
+		{name: "Seven multiplied by six is forty two", a: 7, b: 6, want: 42},
+		{name: "Six point five multiplied by two is thirteen", a: 6.5, b: 2, want: 13},
+		{name: "Zero multiplied by three is zero", a: 0, b: 3, want: 0},
 	}
 
 	for _, tc := range testCases {
 		got := calculator.Multiply(tc.a, tc.b)
 		if tc.want != got {
-			t.Errorf("%s : %f multiplied by %f failed. Expected %f but got %f",tc.message, tc.a, tc.b, tc.want, got)
+			t.Errorf("%s : %f multiplied by %f failed. Expected %f but got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 	}
 }
@@ -118,20 +121,19 @@ func TestMultiplyRandom(t *testing.T) {
 	}
 }
 
-
 func TestDivide(t *testing.T) {
 	t.Parallel()
 	type testCase struct {
-		a, b float64
-		want float64
+		name        string
+		a, b        float64
+		want        float64
 		errExpected bool
-		message string
 	}
 
-	testCases := []testCase {
-		{a: 7, b: 2, want: 3.5, errExpected: false, message: "Two +ve numbers"},
-		{a: 6, b: 0, want: 999, errExpected: true, message: "A divide by zero case"},
-		{a: 3, b: 3, want: 1, errExpected: false, message: "Two +ve numbers"},
+	testCases := []testCase{
+		{name: "Seven divided by two is three point five", a: 7, b: 2, want: 3.5, errExpected: false},
+		{name: "Six divided by zero is nine hundred and ninety nine", a: 6, b: 0, want: 999, errExpected: true},
+		{name: "Three divided by three is one", a: 3, b: 3, want: 1, errExpected: false},
 	}
 
 	for _, tc := range testCases {
@@ -144,7 +146,7 @@ func TestDivide(t *testing.T) {
 		}
 
 		if !tc.errExpected && tc.want != got {
-			t.Errorf("%s : %f divided by %f failed. Expected %f but got %f",tc.message, tc.a, tc.b, tc.want, got)
+			t.Errorf("%s : %f divided by %f failed. Expected %f but got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 
 	}
@@ -157,11 +159,11 @@ func TestDivideRandom(t *testing.T) {
 		a := rand.Float64()
 		b := rand.Float64()
 		if b == 0 {
-			t.Fatal("Divide by zero not allowed!")
+			continue
 		}
-		want := a/b
+		want := a / b
 		got, err := calculator.Divide(a, b)
-		if err != nil{
+		if err != nil {
 			t.Error("Division failed.")
 		}
 		if want != got {
@@ -169,8 +171,6 @@ func TestDivideRandom(t *testing.T) {
 		}
 	}
 }
-
-
 
 func TestSqrt(t *testing.T) {
 	t.Parallel()
