@@ -3,7 +3,6 @@ package calculator
 
 import (
 	"fmt"
-	"log"
 	"math"
 )
 
@@ -37,11 +36,8 @@ func Sqrt(a float64) (float64, error) {
 	return math.Sqrt(a), nil
 }
 
-func AddMany(inputs ...float64) float64 {
-	var sum float64
-	if len(inputs) < 2 {
-		log.Fatalf("Please specify at least 2 values.")
-	}
+func AddMany(a, b float64, inputs ...float64) float64 {
+	sum := a + b
 	for _, input := range inputs {
 		sum += input
 
@@ -49,46 +45,42 @@ func AddMany(inputs ...float64) float64 {
 	return sum
 }
 
-func SubtractMany(inputs ...float64) float64 {
-	var total float64
+func SubtractMany(a, b float64, inputs ...float64) float64 {
+	sum := a - b
 	for _, input := range inputs {
-		total = total - input
+		sum -= input
 
 	}
-	return total
+	return sum
 }
 
-func MultiplyMany(inputs ...float64) float64 {
-	var total float64
-	for index, input := range inputs {
-		if index == 0 {
-			total = inputs[index]
-		} else {
-			total = total * input
-		}
-
+func MultiplyMany(a, b float64, inputs ...float64) float64 {
+	sum := a * b
+	for _, input := range inputs {
+		sum *= input
 	}
-	return total
+	return sum
 
 }
 
-func DivideMany(inputs ...float64) (float64, error) {
-	var val float64
+func DivideMany(a, b float64, inputs ...float64) (float64, error) {
 
-	for index, input := range inputs {
+	if b == 0 {
+		return 0, fmt.Errorf("bad input: Divide by zero is not allowed")
+	}
+	sum := a / b
+
+	for _, input := range inputs {
 		if input == 0 {
 			return 0, fmt.Errorf("bad input: Divide by zero is not allowed")
 		}
-		if index == 0 {
-			val = inputs[index]
-		} else {
-			val = val / input
-		}
+		sum /= input
 
 	}
-	return val, nil
+	return sum, nil
 }
 
-func CloseEnough(a, b, tolerance float64) bool {
+func CloseEnough(a, b float64) bool {
+	tolerance := 0.0000002
 	return math.Abs(a-b) <= tolerance
 }

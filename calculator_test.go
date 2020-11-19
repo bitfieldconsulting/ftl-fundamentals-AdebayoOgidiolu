@@ -2,6 +2,7 @@ package calculator_test
 
 import (
 	"calculator"
+	"math"
 	"math/rand"
 	"testing"
 	"time"
@@ -59,11 +60,9 @@ func TestSubtract(t *testing.T) {
 		{name: "Five minus five equals zero", a: 5, b: 5, want: 0},
 	}
 
-	var tolerance float64 = 0.0000002
-
 	for _, tc := range testCases {
 		got := calculator.Subtract(tc.a, tc.b)
-		if !calculator.CloseEnough(tc.want, got, tolerance) {
+		if !CloseEnough(tc.want, got) {
 			t.Errorf("%s : %f divided by %f failed. Expected %f but got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 
@@ -119,6 +118,11 @@ func TestMultiplyRandom(t *testing.T) {
 			t.Fatalf("Multiply(%f, %f): want %f, got %f", a, b, want, got)
 		}
 	}
+}
+
+func CloseEnough(a, b float64) bool {
+	tolerance := 0.0000002
+	return math.Abs(a-b) <= tolerance
 }
 
 func TestDivide(t *testing.T) {
@@ -195,4 +199,30 @@ func TestSqrt(t *testing.T) {
 			t.Errorf("%s: Sqrt(%f): want %f, got %f", tc.name, tc.input, tc.want, got)
 		}
 	}
+}
+
+func TestAddMany(t *testing.T) {
+	t.Parallel()
+	type testCase struct {
+		name  string
+		a, b  float64
+		extra []float64
+		want  float64
+	}
+
+	testCases := []testCase{
+		{name: "Two plus two equals four", a: 2, b: 2, want: 4},
+		{name: "Negative three plus three equals zero", a: -3, b: 3, want: 0},
+		{name: "Five plus two equals Seven", a: 5, b: 2, want: 7},
+		{name: "Supply extra inputs", a: 5, b: 2, extra: []float64{2, 3}, want: 12},
+	}
+
+	for _, tc := range testCases {
+
+		got := calculator.AddMany(tc.a, tc.b, tc.extra...)
+		if tc.want != got {
+			t.Errorf("%s : Add(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
+		}
+	}
+
 }
