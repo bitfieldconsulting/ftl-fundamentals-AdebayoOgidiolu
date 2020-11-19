@@ -79,8 +79,3 @@ func DivideMany(a, b float64, inputs ...float64) (float64, error) {
 	}
 	return sum, nil
 }
-
-func CloseEnough(a, b float64) bool {
-	tolerance := 0.0000002
-	return math.Abs(a-b) <= tolerance
-}
