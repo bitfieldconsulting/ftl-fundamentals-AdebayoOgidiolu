@@ -10,16 +10,29 @@ import (
 
 func TestAdd(t *testing.T) {
 	t.Parallel()
-	type testCase struct {
+	testCases := []struct {
 		name string
 		a, b float64
 		want float64
-	}
-
-	testCases := []testCase{
-		{name: "Two plus two equals four", a: 2, b: 2, want: 4},
-		{name: "Negative three plus three equals zero", a: -3, b: 3, want: 0},
-		{name: "Five plus two equals Seven", a: 5, b: 2, want: 7},
+	}{
+		{
+			name: "Two plus two equals four",
+			a:    2,
+			b:    2,
+			want: 4,
+		},
+		{
+			name: "Negative three plus three equals zero",
+			a:    -3,
+			b:    3,
+			want: 0,
+		},
+		{
+			name: "Five plus two equals Seven",
+			a:    5,
+			b:    2,
+			want: 7,
+		},
 	}
 
 	for _, tc := range testCases {
@@ -48,22 +61,35 @@ func TestAddRandom(t *testing.T) {
 
 func TestSubtract(t *testing.T) {
 	t.Parallel()
-	type testCase struct {
+	testCases := []struct {
 		name string
 		a, b float64
 		want float64
-	}
-
-	testCases := []testCase{
-		{name: "Six minus five point two equals zero point eight", a: 6, b: 5.2, want: 0.8},
-		{name: "Negative two minus four equals -negative six", a: -2, b: 4, want: -6},
-		{name: "Five minus five equals zero", a: 5, b: 5, want: 0},
+	}{
+		{
+			name: "Six minus five point two equals zero point eight",
+			a:    6,
+			b:    5.2,
+			want: 0.8,
+		},
+		{
+			name: "Negative two minus four equals -negative six",
+			a:    -2,
+			b:    4,
+			want: -6,
+		},
+		{
+			name: "Five minus five equals zero",
+			a:    5,
+			b:    5,
+			want: 0,
+		},
 	}
 
 	for _, tc := range testCases {
 		got := calculator.Subtract(tc.a, tc.b)
 		if !CloseEnough(tc.want, got) {
-			t.Errorf("%s : %f divided by %f failed. Expected %f but got %f", tc.name, tc.a, tc.b, tc.want, got)
+			t.Errorf("%s : Add(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 
 	}
@@ -85,23 +111,36 @@ func TestSubtractRandom(t *testing.T) {
 
 func TestMultiply(t *testing.T) {
 	t.Parallel()
-	type testCase struct {
+	testCases := []struct {
 		name    string
 		a, b    float64
 		want    float64
 		message string
-	}
-
-	testCases := []testCase{
-		{name: "Seven multiplied by six is forty two", a: 7, b: 6, want: 42},
-		{name: "Six point five multiplied by two is thirteen", a: 6.5, b: 2, want: 13},
-		{name: "Zero multiplied by three is zero", a: 0, b: 3, want: 0},
+	}{
+		{
+			name: "Seven multiplied by six is forty two",
+			a:    7,
+			b:    6,
+			want: 42,
+		},
+		{
+			name: "Six point five multiplied by two is thirteen",
+			a:    6.5,
+			b:    2,
+			want: 13,
+		},
+		{
+			name: "Zero multiplied by three is zero",
+			a:    0,
+			b:    3,
+			want: 0,
+		},
 	}
 
 	for _, tc := range testCases {
 		got := calculator.Multiply(tc.a, tc.b)
 		if tc.want != got {
-			t.Errorf("%s : %f multiplied by %f failed. Expected %f but got %f", tc.name, tc.a, tc.b, tc.want, got)
+			t.Errorf("%s : Multiply(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 	}
 }
@@ -127,17 +166,33 @@ func CloseEnough(a, b float64) bool {
 
 func TestDivide(t *testing.T) {
 	t.Parallel()
-	type testCase struct {
+	testCases := []struct {
 		name        string
 		a, b        float64
 		want        float64
 		errExpected bool
-	}
-
-	testCases := []testCase{
-		{name: "Seven divided by two is three point five", a: 7, b: 2, want: 3.5, errExpected: false},
-		{name: "Six divided by zero is nine hundred and ninety nine", a: 6, b: 0, want: 999, errExpected: true},
-		{name: "Three divided by three is one", a: 3, b: 3, want: 1, errExpected: false},
+	}{
+		{
+			name:        "Seven divided by two is three point five",
+			a:           7,
+			b:           2,
+			want:        3.5,
+			errExpected: false,
+		},
+		{
+			name:        "Six divided by zero is nine hundred and ninety nine",
+			a:           6,
+			b:           0,
+			want:        999,
+			errExpected: true,
+		},
+		{
+			name:        "Three divided by three is one",
+			a:           3,
+			b:           3,
+			want:        1,
+			errExpected: false,
+		},
 	}
 
 	for _, tc := range testCases {
@@ -146,11 +201,11 @@ func TestDivide(t *testing.T) {
 		errReceived := err != nil
 
 		if errReceived != tc.errExpected {
-			t.Fatalf("Divide (%f, %f): unexpected error status: %v", tc.a, tc.b, tc.errExpected)
+			t.Fatalf("%s :Divide (%f, %f): unexpected error status: %v", tc.name, tc.a, tc.b, tc.errExpected)
 		}
 
 		if !tc.errExpected && tc.want != got {
-			t.Errorf("%s : %f divided by %f failed. Expected %f but got %f", tc.name, tc.a, tc.b, tc.want, got)
+			t.Errorf("%s : Divide(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 
 	}
@@ -178,17 +233,33 @@ func TestDivideRandom(t *testing.T) {
 
 func TestSqrt(t *testing.T) {
 	t.Parallel()
-	type testCase struct {
+	testCases := []struct {
 		name        string
 		input       float64
 		want        float64
 		errExpected bool
+	}{
+
+		{
+			name:        "Square root of 4 is 2",
+			input:       4,
+			want:        2,
+			errExpected: false,
+		},
+		{
+			name:        "Square root of one is one",
+			input:       1,
+			want:        1,
+			errExpected: false,
+		},
+		{
+			name:        "Square root of a negative number is not allowed (unless you're a physicist)",
+			input:       -1,
+			want:        999,
+			errExpected: true,
+		},
 	}
-	testCases := []testCase{
-		{name: "Square root of 4 is 2", input: 4, want: 2, errExpected: false},
-		{name: "Square root of one is one", input: 1, want: 1, errExpected: false},
-		{name: "Square root of a negative number is not allowed (unless you're a physicist)", input: -1, want: 999, errExpected: true},
-	}
+
 	for _, tc := range testCases {
 		got, err := calculator.Sqrt(tc.input)
 		errReceived := err != nil
@@ -203,25 +274,43 @@ func TestSqrt(t *testing.T) {
 
 func TestAddMany(t *testing.T) {
 	t.Parallel()
-	type testCase struct {
+	testCases := []struct {
 		name  string
 		a, b  float64
 		extra []float64
 		want  float64
-	}
-
-	testCases := []testCase{
-		{name: "Two plus two equals four", a: 2, b: 2, want: 4},
-		{name: "Negative three plus three equals zero", a: -3, b: 3, want: 0},
-		{name: "Five plus two equals Seven", a: 5, b: 2, want: 7},
-		{name: "Supply extra inputs", a: 5, b: 2, extra: []float64{2, 3}, want: 12},
+	}{
+		{
+			name: "Two plus two equals four",
+			a:    2,
+			b:    2,
+			want: 4},
+		{
+			name: "Negative three plus three equals zero",
+			a:    -3,
+			b:    3,
+			want: 0,
+		},
+		{
+			name: "Five plus two equals Seven",
+			a:    5,
+			b:    2,
+			want: 7,
+		},
+		{
+			name:  "Supply extra inputs",
+			a:     5,
+			b:     2,
+			extra: []float64{2, 3},
+			want:  12,
+		},
 	}
 
 	for _, tc := range testCases {
 
 		got := calculator.AddMany(tc.a, tc.b, tc.extra...)
 		if tc.want != got {
-			t.Errorf("%s : Add(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
+			t.Errorf("%s : AddMany(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
 		}
 	}
 
