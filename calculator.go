@@ -83,7 +83,6 @@ func DivideMany(a, b float64, inputs ...float64) (float64, error) {
 			return 0, fmt.Errorf("bad input: Divide by zero is not allowed")
 		}
 		sum /= input
-
 	}
 	return sum, nil
 }
