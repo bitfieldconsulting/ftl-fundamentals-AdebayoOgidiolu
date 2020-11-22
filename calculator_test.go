@@ -36,7 +36,6 @@ func TestAdd(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-
 		got := calculator.Add(tc.a, tc.b)
 		if tc.want != got {
 			t.Errorf("%s : Add(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
@@ -196,7 +195,6 @@ func TestDivide(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-
 		got, err := calculator.Divide(tc.a, tc.b)
 		errReceived := err != nil
 
@@ -307,7 +305,6 @@ func TestAddMany(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-
 		got := calculator.AddMany(tc.a, tc.b, tc.extra...)
 		if tc.want != got {
 			t.Errorf("%s : AddMany(%f , %f): want %f, got %f", tc.name, tc.a, tc.b, tc.want, got)
