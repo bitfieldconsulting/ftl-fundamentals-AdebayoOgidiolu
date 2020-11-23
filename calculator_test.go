@@ -179,7 +179,7 @@ func TestDivide(t *testing.T) {
 			errExpected: false,
 		},
 		{
-			name:        "Six divided by zero is nine hundred and ninety nine",
+			name:        "Division by zero is an error",
 			a:           6,
 			b:           0,
 			want:        999,
